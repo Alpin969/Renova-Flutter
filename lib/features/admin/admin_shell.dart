@@ -9,14 +9,17 @@ import 'dashboard_tab.dart';
 
 /// Kerangka aplikasi untuk ADMIN: lima menu di navigasi bawah.
 class AdminShell extends StatefulWidget {
-  const AdminShell({super.key});
+  const AdminShell({super.key, this.initialIndex = 0});
+
+  /// Menu yang dibuka pertama kali. Bawaannya Dashboard.
+  final int initialIndex;
 
   @override
   State<AdminShell> createState() => _AdminShellState();
 }
 
 class _AdminShellState extends State<AdminShell> {
-  int _indeks = 0;
+  late int _indeks = widget.initialIndex.clamp(0, 4);
 
   @override
   Widget build(BuildContext context) {

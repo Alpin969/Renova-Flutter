@@ -65,16 +65,18 @@ class ApiClient {
 
   /// Mengirim satu berkas sebagai `multipart/form-data`.
   ///
-  /// Nama field mengikuti backend: `photo` pada endpoint foto pesanan.
-  Future<dynamic> postMultipart(
+  /// Nama field mengikuti backend: `photo` pada endpoint foto pesanan. Method
+  /// juga mengikuti backend — unggah foto pesanan memakai PATCH, bukan POST.
+  Future<dynamic> sendMultipart(
     String path, {
+    String method = 'POST',
     required String field,
     required List<int> bytes,
     required String filename,
     String? contentType,
   }) async {
     final token = _tokenProvider();
-    final request = http.MultipartRequest('POST', _uri(path));
+    final request = http.MultipartRequest(method, _uri(path));
     _pasangHeader(request, token);
 
     request.files.add(
@@ -103,7 +105,7 @@ class ApiClient {
       throw _kesalahanJaringan(error.toString());
     }
 
-    return _bacaAman(response, token);
+    return _bacaAman(response, token).data;
   }
 
   void close() => _client.close();

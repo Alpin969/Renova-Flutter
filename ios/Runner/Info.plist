@@ -26,6 +26,12 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>RENOVA memerlukan akses galeri untuk melampirkan foto pakaian pada pesanan.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>RENOVA memerlukan akses kamera untuk memotret pakaian yang akan dicuci.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>RENOVA tidak merekam audio; izin ini hanya bawaan pemilih kamera saat mengambil foto.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

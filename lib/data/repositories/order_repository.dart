@@ -120,8 +120,9 @@ class OrderRepository {
     String? contentType,
   }) async {
     final data = Json.asMap(
-      await _api.postMultipart(
+      await _api.sendMultipart(
         '/api/orders/$id/foto',
+        method: 'PATCH',
         field: 'photo',
         bytes: bytes,
         filename: filename,

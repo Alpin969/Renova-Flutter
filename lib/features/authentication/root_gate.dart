@@ -12,7 +12,10 @@ import 'splash_page.dart';
 /// Semua perpindahan setelah login mengikuti nilai `role` dari backend:
 /// ADMIN ke dashboard admin, CUSTOMER ke beranda customer.
 class RootGate extends StatefulWidget {
-  const RootGate({super.key});
+  const RootGate({super.key, this.initialIndex = 0});
+
+  /// Menu yang dibuka pertama kali setelah masuk. Bawaannya menu pertama.
+  final int initialIndex;
 
   @override
   State<RootGate> createState() => _RootGateState();
@@ -56,7 +59,9 @@ class _RootGateState extends State<RootGate> {
           case SessionStatus.masuk:
             final user = session.user;
             if (user == null) return const SplashPage();
-            return user.role.isAdmin ? const AdminShell() : const CustomerShell();
+            return user.role.isAdmin
+                ? AdminShell(initialIndex: widget.initialIndex)
+                : CustomerShell(initialIndex: widget.initialIndex);
         }
       },
     );

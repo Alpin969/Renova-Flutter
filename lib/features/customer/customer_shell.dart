@@ -11,14 +11,17 @@ import 'riwayat_tab.dart';
 
 /// Kerangka aplikasi untuk CUSTOMER: empat menu di navigasi bawah.
 class CustomerShell extends StatefulWidget {
-  const CustomerShell({super.key});
+  const CustomerShell({super.key, this.initialIndex = 0});
+
+  /// Menu yang dibuka pertama kali. Bawaannya Beranda.
+  final int initialIndex;
 
   @override
   State<CustomerShell> createState() => _CustomerShellState();
 }
 
 class _CustomerShellState extends State<CustomerShell> {
-  int _indeks = 0;
+  late int _indeks = widget.initialIndex.clamp(0, 3);
 
   Future<void> _pesan(ServiceItem layanan) async {
     final berhasil = await PesanFormPage.buka(context, layanan);

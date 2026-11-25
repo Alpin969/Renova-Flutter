@@ -58,6 +58,10 @@ class DetailSection extends StatelessWidget {
 }
 
 /// Satu baris label dan nilai. Nilai bisa ditebalkan untuk angka penting.
+///
+/// Di layar sempit label dan nilai ditumpuk: label dengan lebar tetap membuat
+/// nilai hanya sisa beberapa puluh piksel, dan email tanpa spasi akan pecah di
+/// tengah kata ("mail.co" / "m").
 class DetailRow extends StatelessWidget {
   const DetailRow({
     super.key,
@@ -74,35 +78,61 @@ class DetailRow extends StatelessWidget {
   final Widget? nilaiWidget;
   final Color? warnaNilai;
 
+  /// Di bawah lebar ini label dan nilai tidak lagi berdampingan.
+  static const double _lebarMinimumBerderet = 340;
+
   @override
   Widget build(BuildContext context) {
     final tema = Theme.of(context);
+    final gayaNilai = tebal
+        ? tema.textTheme.titleSmall?.copyWith(
+            color: warnaNilai ?? AppColors.textPrimary,
+          )
+        : tema.textTheme.bodyMedium?.copyWith(
+            color: warnaNilai ?? AppColors.textPrimary,
+          );
+
+    final isiNilai = nilaiWidget ??
+        Text(
+          nilai,
+          style: gayaNilai,
+          textAlign: TextAlign.right,
+        );
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 132,
-            child: Text(label, style: tema.textTheme.bodySmall),
-          ),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: nilaiWidget ??
-                Text(
-                  nilai,
-                  style: tebal
-                      ? tema.textTheme.titleSmall?.copyWith(
-                          color: warnaNilai ?? AppColors.textPrimary,
-                        )
-                      : tema.textTheme.bodyMedium?.copyWith(
-                          color: warnaNilai ?? AppColors.textPrimary,
-                        ),
-                  textAlign: TextAlign.right,
+      child: LayoutBuilder(
+        builder: (context, batas) {
+          if (batas.maxWidth < _lebarMinimumBerderet) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label, style: tema.textTheme.bodySmall),
+                const SizedBox(height: 2),
+                DefaultTextStyle.merge(
+                  style: gayaNilai,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: nilaiWidget ??
+                        Text(nilai, style: gayaNilai),
+                  ),
                 ),
-          ),
-        ],
+              ],
+            );
+          }
+
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: 132,
+                child: Text(label, style: tema.textTheme.bodySmall),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(child: isiNilai),
+            ],
+          );
+        },
       ),
     );
   }

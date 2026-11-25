@@ -1,4 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Diperlukan build rilis: aplikasi mengambil seluruh data dari REST API.
+         Manifest debug sudah membawa izin ini sendiri, rilis tidak. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="renova"
         android:name="${applicationName}"
