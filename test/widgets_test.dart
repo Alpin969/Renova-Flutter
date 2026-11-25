@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:renova/core/theme/app_theme.dart';
 import 'package:renova/data/models/order.dart';
+import 'package:renova/shared/widgets/detail_section.dart';
 import 'package:renova/shared/widgets/feedback.dart';
 import 'package:renova/shared/widgets/order_row.dart';
 import 'package:renova/shared/widgets/status_badge.dart';
@@ -100,6 +101,58 @@ void main() {
 
       await tester.tap(find.text('Cuci Kering'));
       expect(diketuk, isTrue);
+    });
+  });
+
+  group('DetailRow', () {
+    Widget bungkusDenganLebar(double lebar, Widget child) {
+      return MaterialApp(
+        theme: AppTheme.light(),
+        home: Scaffold(
+          body: Center(
+            child: SizedBox(width: lebar, child: child),
+          ),
+        ),
+      );
+    }
+
+    testWidgets('di layar sempit label dan nilai ditumpuk', (tester) async {
+      // Label selebar tetap 132 px menyisakan nilai beberapa puluh piksel saja,
+      // sehingga email tanpa spasi pecah di tengah kata. Di bawah ambang ini
+      // keduanya harus bertumpuk.
+      await tester.pumpWidget(
+        bungkusDenganLebar(
+          280,
+          const DetailRow(
+            label: 'Email',
+            nilai: 'budi.santoso@mail.com',
+          ),
+        ),
+      );
+
+      final label = tester.getRect(find.text('Email'));
+      final nilai = tester.getRect(find.text('budi.santoso@mail.com'));
+
+      expect(nilai.top, greaterThan(label.bottom - 1));
+      expect(nilai.left, lessThan(label.right));
+    });
+
+    testWidgets('di layar lebar label dan nilai berdampingan', (tester) async {
+      await tester.pumpWidget(
+        bungkusDenganLebar(
+          520,
+          const DetailRow(
+            label: 'Email',
+            nilai: 'budi.santoso@mail.com',
+          ),
+        ),
+      );
+
+      final label = tester.getRect(find.text('Email'));
+      final nilai = tester.getRect(find.text('budi.santoso@mail.com'));
+
+      expect(nilai.left, greaterThan(label.right));
+      expect(nilai.center.dy, closeTo(label.center.dy, 6));
     });
   });
 
